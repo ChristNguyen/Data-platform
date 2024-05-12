@@ -1,0 +1,25 @@
+version: "2.3"
+services:
+  trino:
+    build: .
+    ports:
+      - "8443:8443"
+    volumes:
+      - ./etc:/etc/trino
+      - ./var:/var/trino
+      - ./log:/var/log/trino
+    restart: always
+  mysql:
+    image: mysql:8.0
+    restart: always
+    environment:
+      - MYSQL_DATABASE=trino
+      - MYSQL_ROOT_PASSWORD=password
+    ports:
+      - "3307:3306"
+    volumes:
+      - dp_mysql:/var/lib/mysql
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+volumes:
+  dp_mysql: null
